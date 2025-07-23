@@ -19,16 +19,16 @@ export function ListOfUsers() {
   return (
     <Card>
       <Title>
-        Usuarios
+        Users
         <Badge style={{ marginLeft: "8px" }}>{users.length}</Badge>
       </Title>
       <Table>
         <TableHead>
           <TableRow>
             <TableHeaderCell> Id </TableHeaderCell>
-            <TableHeaderCell> Nombre </TableHeaderCell>
+            <TableHeaderCell> Fullname </TableHeaderCell>
             <TableHeaderCell> Email </TableHeaderCell>
-            <TableHeaderCell> Acciones </TableHeaderCell>
+            <TableHeaderCell> Actions </TableHeaderCell>
           </TableRow>
         </TableHead>
 

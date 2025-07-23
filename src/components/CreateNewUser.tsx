@@ -33,19 +33,19 @@ export default function CreateNewUser() {
       <Title>Create New User</Title>
 
       <form onSubmit={handleSubmit} className="">
-        <TextInput name="name" placeholder="Aquí el nombre" />
-        <TextInput name="email" placeholder="Aquí el email" />
-        <TextInput name="github" placeholder="Aquí el usuario de GitHub" />
+        <TextInput name="name" placeholder="Fullname" />
+        <TextInput name="email" placeholder="Email" />
+        <TextInput name="github" placeholder="Tên người dùng GitHub" />
 
         <div>
           <Button type="submit" style={{ marginTop: "16px" }}>
-            Crear usuario
+            Create user
           </Button>
           <span>
             {result === "ok" && (
-              <Badge color="green">Guardado correctamente</Badge>
+              <Badge color="green">Đã lưu thành công</Badge>
             )}
-            {result === "ko" && <Badge color="red">Error con los campos</Badge>}
+            {result === "ko" && <Badge color="red">Error</Badge>}
           </span>
         </div>
       </form>
