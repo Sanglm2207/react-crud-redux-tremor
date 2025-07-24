@@ -5,19 +5,16 @@ const DEFAULT_STATE = [
     id: "1",
     name: "Yazman Rodriguez",
     email: "yazmanito@gmail.com",
-    github: "yazmanito",
   },
   {
     id: "2",
     name: "John Doe",
     email: "leo@gmail.com",
-    github: "leo",
   },
   {
     id: "3",
     name: "Haakon Dahlberg",
     email: "haakon@gmail.com",
-    github: "midudev",
   },
 ];
 
@@ -26,7 +23,6 @@ export type UserId = string;
 export interface User {
   name: string;
   email: string;
-  github: string;
 }
 
 export interface UserWithId extends User {
@@ -43,8 +39,14 @@ export const usersSlice = createSlice({
   initialState,
   reducers: {
     addNewUser: (state, action: PayloadAction<User>) => {
-      const id = crypto.randomUUID()
-      state.push({ id, ...action.payload })
+      // Get the highest current ID and increment by 1
+      const maxId = state.reduce((max, user) => {
+        const currentId = parseInt(user.id, 10);
+        return currentId > max ? currentId : max;
+      }, 0);
+      const newId = (maxId + 1).toString();
+
+      state.push({ id: newId, ...action.payload })
     },
     deleteUserById: (state, action: PayloadAction<UserId>) => {
       const id = action.payload;

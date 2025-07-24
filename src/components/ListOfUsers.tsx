@@ -44,7 +44,7 @@ export function ListOfUsers() {
                     borderRadius: "50%",
                     marginRight: "8px",
                   }}
-                  src={`https://unavatar.io/github/${item.github}`}
+                  src={`https://unavatar.io/github/${item.email.split('@')[0]}`}
                   alt={item.name}
                 />
                 {item.name}

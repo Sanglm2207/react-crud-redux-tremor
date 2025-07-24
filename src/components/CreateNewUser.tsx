@@ -16,14 +16,13 @@ export default function CreateNewUser() {
 
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
-    const github = formData.get("github") as string;
 
-    if (!name || !email || !github) {
+    if (!name || !email) {
       // validaciones que tu quieras
       return setResult("ko");
     }
 
-    addUser({ name, email, github });
+    addUser({ name, email });
     setResult("ok");
     form.reset();
   };
@@ -35,7 +34,6 @@ export default function CreateNewUser() {
       <form onSubmit={handleSubmit} className="">
         <TextInput name="name" placeholder="Fullname" />
         <TextInput name="email" placeholder="Email" />
-        <TextInput name="github" placeholder="Tên người dùng GitHub" />
 
         <div>
           <Button type="submit" style={{ marginTop: "16px" }}>
