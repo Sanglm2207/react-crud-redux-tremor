@@ -1,13 +1,41 @@
-export type UserId = string;
+import { Role } from "../roles";
+
+export type Gender = "MALE" | "FEMALE" | "OTHER";
 
 export interface User {
-  name: string;
+  id: number;
   email: string;
+  name: string;
+  age?: number;
+  gender?: Gender;
+  address?: string;
+  phone?: string;
+  avatar?: string;
+  role?: Role; 
+  active?: boolean;
+  createdAt?: string;
 }
 
-export interface UserWithId extends User {
-  id: UserId;
+export interface UsersState {
+  list: User[];
+  isLoading: boolean;
+  error: string | null;
 }
 
-// Định nghĩa State cho slice này
-export type UsersState = UserWithId[];
+export interface CreateUserDto {
+  email: string;
+  name: string;
+  password?: string;
+  roleId: number;
+}
+
+export interface UpdateUserDto {
+  id: number;
+  name?: string;
+  age?: number;
+  gender?: Gender;
+  address?: string;
+  phone?: string;
+  avatar?: string;
+  role?: { id: number }; 
+}

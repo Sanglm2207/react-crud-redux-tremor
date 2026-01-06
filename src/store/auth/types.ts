@@ -1,16 +1,4 @@
-export interface Role {
-  id: number;
-  name: string;
-  description: string;
-  active: boolean;
-}
-
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  role: Role;
-}
+import { User } from "../users";
 
 // Cấu trúc response thành công từ Backend
 export interface ApiResponse<T> {

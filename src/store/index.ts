@@ -1,6 +1,8 @@
 import { configureStore, type Middleware } from "@reduxjs/toolkit";
 import { usersReducer } from "./users";
 import { authReducer } from "./auth";
+import { permissionsReducer } from "./permissions";
+import { rolesReducer } from "./roles";
 
 // Middleware để lưu state vào LocalStorage
 const persistenceLocalStorageMiddleware: Middleware = (store) => (next) => (action) => {
@@ -13,6 +15,8 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     users: usersReducer,
+    permissions: permissionsReducer,
+    roles: rolesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(persistenceLocalStorageMiddleware),

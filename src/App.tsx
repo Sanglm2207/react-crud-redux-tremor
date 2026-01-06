@@ -5,10 +5,14 @@ import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 
-// Import các trang nội dung
-import { ListOfUsers } from "./components/ListOfUsers"; 
+// Import các trang
+import DashboardPage from "./pages/DashboardPage"; 
+import UsersPage from "./pages/UsersPage";      
 import DevicesPage from "./pages/DevicesPage";
 import MaintenancePage from "./pages/MaintenancePage";
+import RolesPage from "./pages/RolesPage";
+import PermissionsPage from "./pages/PermissionsPage";
+import UserEditPage from "./pages/UserEditPage";
 
 function App() {
   return (
@@ -22,10 +26,17 @@ function App() {
         {/* Protected Dashboard Routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
-            <Route path="/" element={<ListOfUsers />} />
+            <Route path="/" element={<DashboardPage />} /> 
+            
             <Route path="/devices" element={<DevicesPage />} />
             <Route path="/maintenance" element={<MaintenancePage />} />
             <Route path="/about" element={<div className="p-4">About Page Content</div>} />
+
+            {/* Nhóm Settings */}
+            <Route path="/settings/users" element={<UsersPage />} />
+            <Route path="/settings/users/:id" element={<UserEditPage />} />
+            <Route path="/settings/roles" element={<RolesPage />} />
+            <Route path="/settings/permissions" element={<PermissionsPage />} />
           </Route>
         </Route>
 

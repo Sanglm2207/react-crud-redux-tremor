@@ -1,43 +1,73 @@
-import { toast } from "sonner";
-import { AppDispatch, RootState } from "../index";
-import { 
-  addNewUser, 
-  deleteUserById, 
-  rollbackUser 
-} from "./reducers";
-import { User, UserId } from "./types";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../lib/axios";
+import { getErrorMessage } from "../../utils/api-error";
+import { User, CreateUserDto, UpdateUserDto } from "./types";
+import { ApiResponse } from "../auth/types";
 
-// Export action thêm user (đồng bộ)
-export const createUser = (user: User) => (dispatch: AppDispatch) => {
-  dispatch(addNewUser(user));
-};
+// GET Fetch Users Path
+export const fetchUsers = createAsyncThunk<User[]>(
+  "users/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get<ApiResponse<{ result: User[] }>>("/users");
+      return res.data.data.result || [];
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
 
-// Thunk: Xử lý xóa user (bao gồm Optimistic UI và API Call)
-export const removeUser = (userId: UserId) => (dispatch: AppDispatch, getState: () => RootState) => {
-  // 1. Lấy trạng thái user trước khi xóa để phòng trường hợp cần rollback
-  const userToRemove = getState().users.find((user) => user.id === userId);
+// POST Create A New User Path
+export const createUser = createAsyncThunk<User, CreateUserDto>(
+  "users/create",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.post<ApiResponse<User>>("/users", data);
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
 
-  // 2. Optimistic Update: Xóa ngay trên UI
-  dispatch(deleteUserById(userId));
+// PAT Update User Path (PATCH)
+export const updateUser = createAsyncThunk<User, UpdateUserDto>(
+  "users/update",
+  async (data, { rejectWithValue }) => {
+    try {
+      const { id, ...body } = data;
+      const res = await api.patch(`/users/${id}`, body);
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
 
-  // 3. Gọi API xóa
-  fetch(`https://jsonplaceholder.typicode.com/users/${userId}`, {
-    method: "DELETE",
-  })
-    .then((res) => {
-      if (res.ok) {
-        toast.success(`User ${userId} deleted successfully`);
-      } else {
-        throw new Error("Failed to delete");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      toast.error(`Error deleting user ${userId}`);
-      
-      // 4. Nếu lỗi, rollback lại trạng thái cũ
-      if (userToRemove) {
-        dispatch(rollbackUser(userToRemove));
-      }
-    });
+// DEL Delete User Path
+export const deleteUser = createAsyncThunk<number, number>(
+  "users/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/users/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
+export const uploadFile = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // Gọi api /files/upload
+  const res = await api.post("/files/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  
+  // Trả về fileUrl từ response
+  return res.data.data.fileUrl; 
 };
