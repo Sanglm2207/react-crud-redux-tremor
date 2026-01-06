@@ -4,6 +4,12 @@ import { fetchUsers, createUser, updateUser, deleteUser } from "./actions";
 
 const initialState: UsersState = {
   list: [],
+  meta: {
+    page: 1,
+    pageSize: 10,
+    pages: 0,
+    total: 0
+  },
   isLoading: false,
   error: null,
 };
@@ -20,7 +26,8 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.list = action.payload;
+        state.list = action.payload.result; // Gán danh sách user
+        state.meta = action.payload.meta;   // Gán meta phân trang
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.isLoading = false;
@@ -29,6 +36,7 @@ export const usersSlice = createSlice({
       // Create
       .addCase(createUser.fulfilled, (state, action) => {
         state.list.unshift(action.payload); // Thêm lên đầu danh sách
+        state.isLoading = false;
       })
       // Update
       .addCase(updateUser.fulfilled, (state, action) => {

@@ -18,15 +18,36 @@ export interface User {
 
 export interface UsersState {
   list: User[];
+  meta: Meta;
   isLoading: boolean;
   error: string | null;
 }
 
+export interface Meta {
+  page: number;
+  pageSize: number;
+  pages: number;
+  total: number;
+}
+
+export interface FetchUsersParams {
+  page?: number;
+  pageSize?: number;
+  // Có thể thêm search, sort sau này
+  name?: string;   // Để search theo tên
+  email?: string;  // Để search theo email (nếu cần)
+}
+
 export interface CreateUserDto {
-  email: string;
   name: string;
+  email: string;
   password?: string;
-  roleId: number;
+  age?: number;
+  gender?: Gender;
+  address?: string;
+  phone?: string;
+  role?: { id: number }; 
+  avatar?: string;
 }
 
 export interface UpdateUserDto {

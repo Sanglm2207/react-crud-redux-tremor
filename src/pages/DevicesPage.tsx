@@ -1,106 +1,88 @@
-import { 
-  Card, 
-  Title, 
-  Text, 
-  Grid, 
-  Badge, 
-  Table, 
-  TableHead, 
-  TableRow, 
-  TableHeaderCell, 
-  TableBody, 
-  TableCell 
-} from "@tremor/react";
-import { Monitor, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import { PageLayout } from "../components/ui/PageLayout";
+import { DataTable, Column } from "../components/ui/Table";
+import { Chip } from "../components/ui/Chip";
+import { SearchInput } from "../components/ui/Input";
+import Breadcrumb from "../components/ui/Breadcrumb";
+import { Monitor, CheckCircle, AlertTriangle, XCircle, Printer, Projector } from "lucide-react";
+import { useState } from "react";
+import clsx from "clsx";
 
+// Mock Data
 const data = [
-  { id: "2314ac15", name: "Máy tính HP EliteBook", type: "Máy tính", status: "active", department: "Kế toán" },
-  { id: "dcb8f697", name: "Máy tính Dell OptiPlex", type: "Máy tính", status: "active", department: "Nhân sự" },
-  { id: "ec6fa871", name: "Máy in Canon LBP", type: "Máy in", status: "maintenance", department: "Hành chính" },
-  { id: "f24e835b", name: "Máy chiếu Epson X300", type: "Máy chiếu", status: "broken", department: "Hội trường" },
+  { id: "2314ac15", name: "HP EliteBook 840", type: "Laptop", status: "active", department: "Kế toán" },
+  { id: "dcb8f697", name: "Dell OptiPlex 7090", type: "PC", status: "active", department: "Nhân sự" },
+  { id: "ec6fa871", name: "Canon LBP 2900", type: "Printer", status: "maintenance", department: "Hành chính" },
+  { id: "f24e835b", name: "Epson EB-X06", type: "Projector", status: "broken", department: "Hội trường" },
 ];
 
 export default function DevicesPage() {
-  return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
-      <Grid numItems={1} numItemsSm={2} numItemsLg={4} className="gap-6">
-        <Card decoration="top" decorationColor="blue" className="flex items-center justify-between">
-          <div>
-            <Text>Tổng thiết bị</Text>
-            <Title>4</Title>
-          </div>
-          <div className="p-2 bg-blue-100 rounded-full text-blue-600">
-             <Monitor size={24} />
-          </div>
-        </Card>
-        <Card decoration="top" decorationColor="green" className="flex items-center justify-between">
-          <div>
-            <Text>Đang hoạt động</Text>
-            <Title>2</Title>
-          </div>
-          <div className="p-2 bg-green-100 rounded-full text-green-600">
-             <CheckCircle size={24} />
-          </div>
-        </Card>
-        <Card decoration="top" decorationColor="yellow" className="flex items-center justify-between">
-          <div>
-            <Text>Đang bảo trì</Text>
-            <Title>1</Title>
-          </div>
-          <div className="p-2 bg-yellow-100 rounded-full text-yellow-600">
-             <AlertTriangle size={24} />
-          </div>
-        </Card>
-        <Card decoration="top" decorationColor="red" className="flex items-center justify-between">
-          <div>
-            <Text>Hư hỏng</Text>
-            <Title>1</Title>
-          </div>
-          <div className="p-2 bg-red-100 rounded-full text-red-600">
-             <XCircle size={24} />
-          </div>
-        </Card>
-      </Grid>
+  const [searchTerm, setSearchTerm] = useState("");
 
-      {/* Device List Table */}
-      <Card>
-        <div className="flex justify-between items-center mb-4">
-            <Title>Danh sách thiết bị</Title>
-            {/* Giả lập bộ lọc */}
-            <div className="flex gap-2">
-                <select className="border rounded-md px-2 py-1 text-sm"><option>Tất cả trạng thái</option></select>
-                <select className="border rounded-md px-2 py-1 text-sm"><option>Tất cả loại</option></select>
+  const columns: Column<typeof data[0]>[] = [
+    { header: "Mã TB", accessorKey: "id", className: "font-mono" },
+    { 
+        header: "Tên thiết bị", 
+        render: (item) => (
+            <div className="flex items-center gap-2">
+                {item.type === "Laptop" || item.type === "PC" ? <Monitor size={16} className="text-gray-400"/> : 
+                 item.type === "Printer" ? <Printer size={16} className="text-gray-400"/> : <Projector size={16} className="text-gray-400"/>}
+                <span className="font-medium">{item.name}</span>
+            </div>
+        ) 
+    },
+    { header: "Loại", accessorKey: "type" },
+    { 
+        header: "Trạng thái", 
+        render: (item) => (
+            <Chip color={item.status === 'active' ? 'green' : item.status === 'broken' ? 'red' : 'yellow'}>
+                {item.status === 'active' ? 'Hoạt động' : item.status === 'broken' ? 'Hư hỏng' : 'Bảo trì'}
+            </Chip>
+        ) 
+    },
+    { header: "Phòng ban", accessorKey: "department" },
+  ];
+
+  return (
+    <PageLayout
+      title="Quản lý thiết bị"
+      subtitle="Theo dõi tình trạng tài sản và thiết bị IT"
+      breadcrumbs={<Breadcrumb items={[{ label: "Thiết bị" }]} />}
+    >
+      {/* Summary Cards - Custom Tailwind */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <SummaryCard title="Tổng thiết bị" value="45" icon={Monitor} color="blue" />
+        <SummaryCard title="Đang hoạt động" value="40" icon={CheckCircle} color="green" />
+        <SummaryCard title="Đang bảo trì" value="3" icon={AlertTriangle} color="yellow" />
+        <SummaryCard title="Hư hỏng" value="2" icon={XCircle} color="red" />
+      </div>
+
+      <div className="mb-4 w-72">
+        <SearchInput value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm thiết bị..." />
+      </div>
+
+      <DataTable columns={columns} data={data} />
+    </PageLayout>
+  );
+}
+
+// Helper Component cho Card thống kê
+function SummaryCard({ title, value, icon: Icon, color }: any) {
+    const colorStyles = {
+        blue: "bg-blue-50 text-blue-600",
+        green: "bg-green-50 text-green-600",
+        yellow: "bg-yellow-50 text-yellow-600",
+        red: "bg-red-50 text-red-600",
+    };
+
+    return (
+        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p className="text-sm text-slate-500 font-medium">{title}</p>
+                <p className="text-2xl font-bold text-slate-800 mt-1">{value}</p>
+            </div>
+            <div className={clsx("p-3 rounded-full", colorStyles[color as keyof typeof colorStyles])}>
+                <Icon size={24} />
             </div>
         </div>
-        
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>MÃ</TableHeaderCell>
-              <TableHeaderCell>TÊN THIẾT BỊ</TableHeaderCell>
-              <TableHeaderCell>LOẠI</TableHeaderCell>
-              <TableHeaderCell>TRẠNG THÁI</TableHeaderCell>
-              <TableHeaderCell>PHÒNG BAN</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.id}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.type}</TableCell>
-                <TableCell>
-                  {item.status === "active" && <Badge color="green">Hoạt động</Badge>}
-                  {item.status === "maintenance" && <Badge color="yellow">Bảo trì</Badge>}
-                  {item.status === "broken" && <Badge color="red">Hư hỏng</Badge>}
-                </TableCell>
-                <TableCell>{item.department}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
-    </div>
-  );
+    )
 }

@@ -13,6 +13,7 @@ import MaintenancePage from "./pages/MaintenancePage";
 import RolesPage from "./pages/RolesPage";
 import PermissionsPage from "./pages/PermissionsPage";
 import UserEditPage from "./pages/UserEditPage";
+import UserCreatePage from "./pages/UserCreatePage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
 
             {/* Nhóm Settings */}
             <Route path="/settings/users" element={<UsersPage />} />
+            <Route path="/settings/users/new" element={<UserCreatePage />} />
             <Route path="/settings/users/:id" element={<UserEditPage />} />
             <Route path="/settings/roles" element={<RolesPage />} />
             <Route path="/settings/permissions" element={<PermissionsPage />} />

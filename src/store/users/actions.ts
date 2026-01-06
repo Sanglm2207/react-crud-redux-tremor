@@ -1,16 +1,34 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../lib/axios";
 import { getErrorMessage } from "../../utils/api-error";
-import { User, CreateUserDto, UpdateUserDto } from "./types";
+import { User, CreateUserDto, UpdateUserDto, Meta, FetchUsersParams } from "./types";
 import { ApiResponse } from "../auth/types";
 
+// Response trả về gồm result và meta
+interface UsersResponse {
+  result: User[];
+  meta: Meta;
+}
+
 // GET Fetch Users Path
-export const fetchUsers = createAsyncThunk<User[]>(
+export const fetchUsers = createAsyncThunk<
+  UsersResponse, 
+  FetchUsersParams
+>(
   "users/fetch",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await api.get<ApiResponse<{ result: User[] }>>("/users");
-      return res.data.data.result || [];
+      // Gọi API kèm query params: /users?page=1&pageSize=10
+      const res = await api.get<ApiResponse<{ result: User[], meta: Meta }>>("/users", {
+        params: {
+          current: params.page || 1,
+          pageSize: params.pageSize || 10,
+          ...params
+        }
+      });
+      
+      // Trả về cả result và meta
+      return res.data.data; 
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }
