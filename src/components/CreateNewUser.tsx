@@ -1,9 +1,10 @@
 import { Badge, Button, Card, TextInput, Title } from "@tremor/react";
 import { useState } from "react";
-import { useUserActions } from "../hooks/useUserActions";
+import { createUser } from "../store/users";
+import { useAppDispatch } from "../store/store";
 
 export default function CreateNewUser() {
-  const { addUser } = useUserActions();
+  const dispatch = useAppDispatch();
   const [result, setResult] = useState<"ok" | "ko" | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -22,21 +23,21 @@ export default function CreateNewUser() {
       return setResult("ko");
     }
 
-    addUser({ name, email });
+    dispatch(createUser({ name, email }));
     setResult("ok");
     form.reset();
   };
 
   return (
-    <Card style={{ marginTop: "16px" }}>
+    <Card className="mt-4">
       <Title>Create New User</Title>
 
-      <form onSubmit={handleSubmit} className="">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
         <TextInput name="name" placeholder="Fullname" />
         <TextInput name="email" placeholder="Email" />
 
-        <div>
-          <Button type="submit" style={{ marginTop: "16px" }}>
+        <div className="flex items-center gap-4">
+          <Button type="submit">
             Create user
           </Button>
           <span>
