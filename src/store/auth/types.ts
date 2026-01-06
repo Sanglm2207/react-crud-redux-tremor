@@ -1,8 +1,15 @@
+export interface Role {
+  id: number;
+  name: string;
+  description: string;
+  active: boolean;
+}
+
 export interface User {
   id: number;
   email: string;
   name: string;
-  role: string;
+  role: Role;
 }
 
 // Cấu trúc response thành công từ Backend

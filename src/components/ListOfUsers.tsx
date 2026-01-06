@@ -21,7 +21,7 @@ export function ListOfUsers() {
     <Card>
       <Title>
         Users
-        <Badge className="ml-2">{users.length}</Badge>
+        <Badge className="ml-2">{users.length}</Badge> 
       </Title>
       <Table>
         <TableHead>

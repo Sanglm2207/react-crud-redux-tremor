@@ -1,50 +1,38 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
-import CreateNewUser from "./components/CreateNewUser";
-import { ListOfUsers } from "./components/ListOfUsers";
 import LoginPage from "./pages/LoginPage";
 import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import DashboardLayout from "./layouts/DashboardLayout";
 
-import { Button } from "@tremor/react";
-import { logout } from "./store/auth/reducers";
-import { useAppDispatch } from "./store/store";
-
-// Tách Dashboard thành component riêng để code App gọn
-const Dashboard = () => {
-    const dispatch = useAppDispatch();
-    return (
-        <div className="max-w-screen-xl mx-auto p-8">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Dashboard</h1>
-                <Button color="red" onClick={() => dispatch(logout())}>Logout</Button>
-            </div>
-            <ListOfUsers />
-            <CreateNewUser />
-        </div>
-    );
-};
+// Import các trang nội dung
+import { ListOfUsers } from "./components/ListOfUsers"; 
+import DevicesPage from "./pages/DevicesPage";
+import MaintenancePage from "./pages/MaintenancePage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes (Login) */}
+        {/* Auth Routes */}
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
         </Route>
 
-        {/* Protected Routes (Dashboard) */}
+        {/* Protected Dashboard Routes */}
         <Route element={<ProtectedRoute />}>
-           {/* Nếu vào trang chủ "/" sẽ render Dashboard */}
-          <Route path="/" element={<Dashboard />} />
+          <Route element={<DashboardLayout />}>
+            <Route path="/" element={<ListOfUsers />} />
+            <Route path="/devices" element={<DevicesPage />} />
+            <Route path="/maintenance" element={<MaintenancePage />} />
+            <Route path="/about" element={<div className="p-4">About Page Content</div>} />
+          </Route>
         </Route>
 
-        {/* Catch all - Redirect to login */}
         <Route path="*" element={<Navigate to="/auth/login" replace />} />
       </Routes>
       
-      <Toaster richColors />
+      <Toaster richColors position="top-right" />
     </BrowserRouter>
   );
 }
