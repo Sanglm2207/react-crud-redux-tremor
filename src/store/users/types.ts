@@ -12,7 +12,7 @@ export interface User {
   phone?: string;
   avatar?: string;
   role?: Role; 
-  active?: boolean;
+  is_active?: boolean;
   createdAt?: string;
 }
 
@@ -36,6 +36,7 @@ export interface FetchUsersParams {
   // Có thể thêm search, sort sau này
   name?: string;   // Để search theo tên
   email?: string;  // Để search theo email (nếu cần)
+  is_active?: boolean;
 }
 
 export interface CreateUserDto {
