@@ -1,17 +1,52 @@
-import CreateNewUser from "./components/CreateNewUser";
-import { ListOfUsers } from "./components/ListOfUsers";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
+import LoginPage from "./pages/LoginPage";
+import AuthLayout from "./layouts/AuthLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import DashboardLayout from "./layouts/DashboardLayout";
+
+// Import các trang
+import DashboardPage from "./pages/DashboardPage"; 
+import UsersPage from "./pages/UsersPage";      
+import DevicesPage from "./pages/DevicesPage";
+import MaintenancePage from "./pages/MaintenancePage";
+import RolesPage from "./pages/RolesPage";
+import PermissionsPage from "./pages/PermissionsPage";
+import UserEditPage from "./pages/UserEditPage";
+import UserCreatePage from "./pages/UserCreatePage";
 
 function App() {
   return (
-    <>
-      <div className="max-w-screen-xl mx-auto p-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-        <ListOfUsers />
-        <CreateNewUser />
-        <Toaster richColors />
-    </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* Auth Routes */}
+        <Route path="/auth" element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+        </Route>
+
+        {/* Protected Dashboard Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/" element={<DashboardPage />} /> 
+            
+            <Route path="/devices" element={<DevicesPage />} />
+            <Route path="/maintenance" element={<MaintenancePage />} />
+            <Route path="/about" element={<div className="p-4">About Page Content</div>} />
+
+            {/* Nhóm Settings */}
+            <Route path="/settings/users" element={<UsersPage />} />
+            <Route path="/settings/users/new" element={<UserCreatePage />} />
+            <Route path="/settings/users/:id" element={<UserEditPage />} />
+            <Route path="/settings/roles" element={<RolesPage />} />
+            <Route path="/settings/permissions" element={<PermissionsPage />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/auth/login" replace />} />
+      </Routes>
+      
+      <Toaster richColors position="top-right" />
+    </BrowserRouter>
   );
 }
 
