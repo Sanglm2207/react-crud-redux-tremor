@@ -6,7 +6,8 @@ import {
   Info,
   Shield,
   Lock,
-  Users
+  Users,
+  Folder
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -23,6 +24,7 @@ export default function Sidebar() {
     { to: "/settings/users", icon: Users, label: "Users" },
     { to: "/settings/roles", icon: Shield, label: "Roles" },
     { to: "/settings/permissions", icon: Lock, label: "Permissions" },
+    { to: "/settings/files", icon: Folder, label: "Files & Media" },
   ];
 
   const renderNavLink = (to: string, Icon: React.ElementType, label: string) => (
