@@ -18,6 +18,7 @@ import RoleEditPage from "./pages/RoleEditPage";
 import FilesPage from "./pages/FilesPage";
 import FileUploadPage from "./pages/FileUploadPage";
 import MailsPage from "./pages/MailsPage";
+import DeviceEditPage from "./pages/DeviceEditPage";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
             <Route path="/" element={<DashboardPage />} /> 
             
             <Route path="/devices" element={<DevicesPage />} />
+            <Route path="/devices/new" element={<DeviceEditPage />} />
+            <Route path="/devices/:id" element={<DeviceEditPage />} /> 
             <Route path="/maintenance" element={<MaintenancePage />} />
             <Route path="/about" element={<div className="p-4">About Page Content</div>} />
 

@@ -5,6 +5,8 @@ import { permissionsReducer } from "./permissions";
 import { rolesReducer } from "./roles";
 import { filesReducer } from "./files";
 import { mailsReducer } from "./mails";
+import { issuesReducer } from "./issues";
+import { devicesReducer } from "./devices";
 
 // Middleware để lưu state vào LocalStorage
 const persistenceLocalStorageMiddleware: Middleware = (store) => (next) => (action) => {
@@ -20,7 +22,9 @@ export const store = configureStore({
     permissions: permissionsReducer,
     roles: rolesReducer,
     files: filesReducer,
-    mails: mailsReducer
+    mails: mailsReducer,
+    issues: issuesReducer,
+    devices: devicesReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(persistenceLocalStorageMiddleware),

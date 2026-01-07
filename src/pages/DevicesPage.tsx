@@ -3,50 +3,77 @@ import { DataTable, Column } from "../components/ui/Table";
 import { Chip } from "../components/ui/Chip";
 import { SearchInput } from "../components/ui/Input";
 import Breadcrumb from "../components/ui/Breadcrumb";
-import { Monitor, CheckCircle, AlertTriangle, XCircle, Printer, Projector } from "lucide-react";
-import { useState } from "react";
+import { Monitor, CheckCircle, AlertTriangle, XCircle, Printer, Projector, Plus, Edit2, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { Button } from "../components/ui/Button";
+import { Pagination } from "../components/ui/Pagination";
+import { deleteDevice, Device, fetchDevices, selectDevices } from "../store/devices";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-// Mock Data
-const data = [
-  { id: "2314ac15", name: "HP EliteBook 840", type: "Laptop", status: "active", department: "Kế toán" },
-  { id: "dcb8f697", name: "Dell OptiPlex 7090", type: "PC", status: "active", department: "Nhân sự" },
-  { id: "ec6fa871", name: "Canon LBP 2900", type: "Printer", status: "maintenance", department: "Hành chính" },
-  { id: "f24e835b", name: "Epson EB-X06", type: "Projector", status: "broken", department: "Hội trường" },
-];
+
 
 export default function DevicesPage() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { list: devices, meta, isLoading } = useAppSelector(selectDevices);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [searchTerm, setSearchTerm] = useState("");
 
-  const columns: Column<typeof data[0]>[] = [
-    { header: "Mã TB", accessorKey: "id", className: "font-mono" },
-    { 
-        header: "Tên thiết bị", 
-        render: (item) => (
-            <div className="flex items-center gap-2">
-                {item.type === "Laptop" || item.type === "PC" ? <Monitor size={16} className="text-gray-400"/> : 
-                 item.type === "Printer" ? <Printer size={16} className="text-gray-400"/> : <Projector size={16} className="text-gray-400"/>}
-                <span className="font-medium">{item.name}</span>
-            </div>
-        ) 
-    },
-    { header: "Loại", accessorKey: "type" },
-    { 
-        header: "Trạng thái", 
-        render: (item) => (
-            <Chip color={item.status === 'active' ? 'green' : item.status === 'broken' ? 'red' : 'yellow'}>
-                {item.status === 'active' ? 'Hoạt động' : item.status === 'broken' ? 'Hư hỏng' : 'Bảo trì'}
-            </Chip>
-        ) 
-    },
-    { header: "Phòng ban", accessorKey: "department" },
-  ];
+  useEffect(() => {
+    dispatch(fetchDevices({ page: currentPage, pageSize: 10 }));
+  }, [dispatch, currentPage]);
 
+  const handleDelete = async (id: number) => {
+    if(confirm("Xóa thiết bị này?")) {
+        await dispatch(deleteDevice(id)).unwrap();
+        toast.success("Đã xóa");
+        dispatch(fetchDevices({ page: currentPage }));
+    }
+  }
+
+  const columns: Column<Device>[] = [
+    { header: "Mã", accessorKey: "code", className: "font-mono" }, 
+    { header: "Tên thiết bị", accessorKey: "name", className: "font-medium" },
+    { header: "Loại", accessorKey: "type" },
+    { header: "Phòng ban", accessorKey: "department" },
+    { header: "Trạng thái", render: (d) => <Chip color="green">{d.status}</Chip> }, 
+    { header: "Mô tả", accessorKey: "description", className: "text-slate-500 truncate max-w-xs" },
+    {
+      header: "Hành động",
+      className: "text-right",
+      render: (device) => (
+        <div className="flex justify-end gap-2">
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            icon={Edit2} 
+            onClick={() => navigate(`/devices/${device.id}`)}
+          />
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            className="text-red-600 hover:bg-red-50"
+            icon={Trash2} 
+            onClick={() => handleDelete(device.id)}
+          />
+        </div>
+      )
+    }
+  ];
   return (
     <PageLayout
       title="Quản lý thiết bị"
       subtitle="Theo dõi tình trạng tài sản và thiết bị IT"
       breadcrumbs={<Breadcrumb items={[{ label: "Thiết bị" }]} />}
+      actions={
+        <Button icon={Plus} onClick={() => navigate("/devices/new")}>
+            Thêm thiết bị
+        </Button>
+      }
     >
       {/* Summary Cards - Custom Tailwind */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -60,7 +87,16 @@ export default function DevicesPage() {
         <SearchInput value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Tìm thiết bị..." />
       </div>
 
-      <DataTable columns={columns} data={data} />
+      <div className="bg-white rounded-lg border shadow-sm">
+        <DataTable columns={columns} data={devices} isLoading={isLoading} />
+        <Pagination 
+            currentPage={meta.page} 
+            totalPages={meta.pages} 
+            totalItems={meta.total}
+            pageSize={meta.pageSize}
+            onPageChange={setCurrentPage} 
+        />
+      </div>
     </PageLayout>
   );
 }
