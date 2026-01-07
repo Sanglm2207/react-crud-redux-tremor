@@ -17,6 +17,7 @@ import UserCreatePage from "./pages/UserCreatePage";
 import RoleEditPage from "./pages/RoleEditPage";
 import FilesPage from "./pages/FilesPage";
 import FileUploadPage from "./pages/FileUploadPage";
+import MailsPage from "./pages/MailsPage";
 
 function App() {
   return (
@@ -46,6 +47,8 @@ function App() {
             <Route path="/settings/permissions" element={<PermissionsPage />} />
             <Route path="/settings/files" element={<FilesPage />} />
             <Route path="/settings/files/new" element={<FileUploadPage />} />
+            <Route path="/settings/mails" element={<MailsPage />} />
+
           </Route>
         </Route>
 
