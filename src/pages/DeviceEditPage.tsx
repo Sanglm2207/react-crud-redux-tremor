@@ -23,7 +23,8 @@ export default function DeviceEditPage() {
     type: "LAPTOP",
     status: "ACTIVE",
     department: "",
-    description: ""
+    description: "",
+    maintenanceCycleDays: 0
   });
 
   // Load data nếu F5 hoặc Edit
@@ -43,7 +44,8 @@ export default function DeviceEditPage() {
           type: found.type,
           status: found.status,
           department: found.department,
-          description: found.description || ""
+          description: found.description || "",
+          maintenanceCycleDays: found.maintenanceCycleDays
         });
       }
     }
@@ -108,6 +110,17 @@ export default function DeviceEditPage() {
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
             />
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Chu kỳ bảo trì (Ngày)</label>
+              <Input 
+                  type="number"
+                  placeholder="VD: 30 (0 nếu không cần)"
+                  value={formData.maintenanceCycleDays}
+                  onChange={e => setFormData({...formData, maintenanceCycleDays: Number(e.target.value)})}
+              />
+              <p className="text-[10px] text-slate-400 mt-1">Hệ thống sẽ tự động nhắc bảo trì sau số ngày này.</p>
+            </div>
 
             <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Loại thiết bị</label>

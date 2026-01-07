@@ -7,6 +7,7 @@ import { filesReducer } from "./files";
 import { mailsReducer } from "./mails";
 import { issuesReducer } from "./issues";
 import { devicesReducer } from "./devices";
+import { gamificationReducer } from "./gamification";
 
 // Middleware để lưu state vào LocalStorage
 const persistenceLocalStorageMiddleware: Middleware = (store) => (next) => (action) => {
@@ -24,7 +25,8 @@ export const store = configureStore({
     files: filesReducer,
     mails: mailsReducer,
     issues: issuesReducer,
-    devices: devicesReducer
+    devices: devicesReducer,
+    gamification: gamificationReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(persistenceLocalStorageMiddleware),

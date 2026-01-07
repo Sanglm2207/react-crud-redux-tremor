@@ -19,6 +19,7 @@ import FilesPage from "./pages/FilesPage";
 import FileUploadPage from "./pages/FileUploadPage";
 import MailsPage from "./pages/MailsPage";
 import DeviceEditPage from "./pages/DeviceEditPage";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -38,7 +39,7 @@ function App() {
             <Route path="/devices/new" element={<DeviceEditPage />} />
             <Route path="/devices/:id" element={<DeviceEditPage />} /> 
             <Route path="/maintenance" element={<MaintenancePage />} />
-            <Route path="/about" element={<div className="p-4">About Page Content</div>} />
+            <Route path="/about" element={<AboutPage />} />
 
             {/* Nhóm Settings */}
             <Route path="/settings/users" element={<UsersPage />} />

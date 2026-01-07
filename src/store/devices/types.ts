@@ -8,6 +8,10 @@ export interface Device {
   status: string; // ACTIVE, BROKEN, MAINTENANCE
   department: string;
   description?: string;
+
+  maintenanceCycleDays: number; // 0 nếu không cần bảo trì
+  lastMaintenanceDate?: string;
+
   updatedAt?: string;
 }
 
@@ -25,6 +29,8 @@ export interface CreateDeviceDto {
   status: string;
   department: string;
   description?: string;
+
+  maintenanceCycleDays: number;
 }
 
 export interface UpdateDeviceDto {
@@ -35,6 +41,9 @@ export interface UpdateDeviceDto {
   status?: string;
   department?: string;
   description?: string;
+
+  maintenanceCycleDays?: number;
+  lastMaintenanceDate?: string;
 }
 
 export interface FetchDevicesParams {
