@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UsersState } from "./types";
-import { fetchUsers, createUser, updateUser, deleteUser } from "./actions";
+import { fetchUsers, createUser, updateUser, deleteUser, deactivateUsers, activateUsers } from "./actions";
 
 const initialState: UsersState = {
   list: [],
@@ -48,6 +48,23 @@ export const usersSlice = createSlice({
       // Delete
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.list = state.list.filter((u) => u.id !== action.payload);
+      })
+      .addCase(deactivateUsers.fulfilled, (state, action) => {
+        const idsToDeactivate = action.payload;
+        // Duyệt qua danh sách user hiện tại, nếu ID nằm trong danh sách cần xóa -> set active = false
+        state.list = state.list.map(user => 
+          idsToDeactivate.includes(user.id) 
+            ? { ...user, active: false } 
+            : user
+        );
+      })
+      .addCase(activateUsers.fulfilled, (state, action) => {
+        const idsToActivate = action.payload;
+        state.list = state.list.map(user => 
+          idsToActivate.includes(user.id) 
+            ? { ...user, active: true } // Chuyển thành true
+            : user
+        );
       });
   },
 });

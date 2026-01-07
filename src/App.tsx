@@ -14,6 +14,10 @@ import RolesPage from "./pages/RolesPage";
 import PermissionsPage from "./pages/PermissionsPage";
 import UserEditPage from "./pages/UserEditPage";
 import UserCreatePage from "./pages/UserCreatePage";
+import RoleEditPage from "./pages/RoleEditPage";
+import FilesPage from "./pages/FilesPage";
+import FileUploadPage from "./pages/FileUploadPage";
+import MailsPage from "./pages/MailsPage";
 
 function App() {
   return (
@@ -38,7 +42,13 @@ function App() {
             <Route path="/settings/users/new" element={<UserCreatePage />} />
             <Route path="/settings/users/:id" element={<UserEditPage />} />
             <Route path="/settings/roles" element={<RolesPage />} />
+            <Route path="/settings/roles/new" element={<RoleEditPage />} /> 
+            <Route path="/settings/roles/:id" element={<RoleEditPage />} /> 
             <Route path="/settings/permissions" element={<PermissionsPage />} />
+            <Route path="/settings/files" element={<FilesPage />} />
+            <Route path="/settings/files/new" element={<FileUploadPage />} />
+            <Route path="/settings/mails" element={<MailsPage />} />
+
           </Route>
         </Route>
 

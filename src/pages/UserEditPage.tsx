@@ -162,9 +162,9 @@ export default function UserEditPage() {
                 <p className="text-xs text-slate-500">{currentUser?.email}</p>
                 <span className={clsx(
                     "inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-bold border uppercase",
-                    currentUser?.active ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"
+                    currentUser?.is_active ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"
                 )}>
-                    {currentUser?.active ? "Active" : "Inactive"}
+                    {currentUser?.is_active ? "Active" : "Inactive"}
                 </span>
             </div>
           </div>

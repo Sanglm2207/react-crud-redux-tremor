@@ -89,3 +89,28 @@ export const uploadFile = async (file: File): Promise<string> => {
   // Trả về fileUrl từ response
   return res.data.data.fileUrl; 
 };
+
+// Action Deactivate Multiple Users
+export const deactivateUsers = createAsyncThunk<number[], number[]>(
+  "users/deactivate",
+  async (ids, { rejectWithValue }) => {
+    try {
+      await api.post("/users/deactivate", { ids });
+      return ids; // Trả về danh sách ID đã deactivate để update UI
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
+export const activateUsers = createAsyncThunk<number[], number[]>(
+  "users/activate",
+  async (ids, { rejectWithValue }) => {
+    try {
+      await api.post("/users/activate", { ids });
+      return ids;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);

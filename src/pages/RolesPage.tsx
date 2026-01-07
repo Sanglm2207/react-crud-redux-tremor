@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchRoles, deleteRole, selectRoles, Role } from "../store/roles";
 import { PageLayout } from "../components/ui/PageLayout";
 import { DataTable, Column } from "../components/ui/Table";
 import { Button } from "../components/ui/Button";
 import { Chip } from "../components/ui/Chip";
-import { Modal } from "../components/ui/Modal";
-import { Input } from "../components/ui/Input";
 import { SearchInput } from "../components/ui/Input";
 import Breadcrumb from "../components/ui/Breadcrumb";
 import { Plus, Edit2, Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 export default function RolesPage() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const roles = useAppSelector(selectRoles);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => { dispatch(fetchRoles()); }, [dispatch]);
@@ -35,15 +34,28 @@ export default function RolesPage() {
         </Chip>
       ) 
     },
-    {
+ {
       header: "Hành động",
       className: "text-right",
       render: (role) => (
         <div className="flex justify-end gap-2">
-          <Button size="sm" variant="ghost" icon={Edit2} onClick={() => alert("Edit " + role.id)} />
-          <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700" icon={Trash2} onClick={() => dispatch(deleteRole(role.id))} />
+          <Button
+            size="sm"
+            variant="ghost"
+            icon={Edit2}
+            onClick={() => navigate(`/settings/roles/${role.id}`)}
+          />
+          <Button
+            size="sm"
+            variant="ghost"
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            icon={Trash2}
+            onClick={() => {
+                if(confirm("Xóa Role này?")) dispatch(deleteRole(role.id));
+            }}
+          />
         </div>
-      )
+      ),
     }
   ];
 
@@ -53,7 +65,7 @@ export default function RolesPage() {
       subtitle="Quản lý danh sách vai trò và quyền hạn trong hệ thống"
       breadcrumbs={<Breadcrumb items={[{ label: "Cài đặt" }, { label: "Roles" }]} />}
       actions={
-        <Button icon={Plus} onClick={() => setIsModalOpen(true)}>
+        <Button icon={Plus} onClick={() => navigate("/settings/roles/new")}>
           Tạo mới Role
         </Button>
       }
@@ -75,24 +87,6 @@ export default function RolesPage() {
         data={filteredRoles} 
         isLoading={false} // Thay bằng biến loading thật từ redux
       />
-
-      {/* Modal Tạo mới */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Tạo mới Role"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Hủy</Button>
-            <Button onClick={() => setIsModalOpen(false)}>Lưu lại</Button>
-          </>
-        }
-      >
-        <div className="space-y-4">
-          <Input label="Tên Role" placeholder="VD: MANAGER" />
-          <Input label="Mô tả" placeholder="Nhập mô tả..." />
-        </div>
-      </Modal>
     </PageLayout>
   );
 }
