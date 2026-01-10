@@ -1,7 +1,6 @@
 import { configureStore, type Middleware } from "@reduxjs/toolkit";
 import { usersReducer } from "./users";
 import { authReducer } from "./auth";
-import { permissionsReducer } from "./permissions";
 import { rolesReducer } from "./roles";
 import { filesReducer } from "./files";
 import { mailsReducer } from "./mails";
@@ -20,7 +19,6 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     users: usersReducer,
-    permissions: permissionsReducer,
     roles: rolesReducer,
     files: filesReducer,
     mails: mailsReducer,

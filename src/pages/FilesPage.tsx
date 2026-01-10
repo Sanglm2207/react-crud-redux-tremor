@@ -28,7 +28,7 @@ export default function FilesPage() {
   const { user } = useAppSelector(selectAuth);
   
   // Permission Check
-  const isSuperAdmin = user?.role?.name === "SUPER_ADMIN";
+  const isSuperAdmin = user?.role?.name === "ADMIN";
 
   // Local State
   const [viewMode, setViewMode] = useState<ViewMode>('grid');

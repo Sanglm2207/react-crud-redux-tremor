@@ -21,20 +21,28 @@ export default function RolesPage() {
   // Lọc dữ liệu client-side demo
   const filteredRoles = roles.filter(r => r.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // Định nghĩa cột cho Table
-  const columns: Column<Role>[] = [
-    { header: "ID", accessorKey: "id", className: "w-16 font-mono text-xs" },
-    { header: "Tên Role", accessorKey: "name", className: "font-bold" },
-    { header: "Mô tả", accessorKey: "description" },
+ const columns: Column<Role>[] = [
+    { header: "ID", accessorKey: "id", className: "w-16 font-mono text-xs text-slate-500" },
     { 
-      header: "Trạng thái", 
+        header: "Tên Role", 
+        render: (role) => (
+            <div className="font-bold text-slate-700">{role.name}</div>
+        )
+    },
+    { 
+        header: "Mô tả", 
+        accessorKey: "description", 
+        className: "text-slate-500 max-w-md truncate" 
+    },
+    {
+      header: "Trạng thái",
       render: (role) => (
-        <Chip color={role.active ? "green" : "red"}>
+        <Chip color={role.active ? "green" : "red"} className="text-xs">
           {role.active ? "Hoạt động" : "Vô hiệu"}
         </Chip>
-      ) 
+      ),
     },
- {
+    {
       header: "Hành động",
       className: "text-right",
       render: (role) => (

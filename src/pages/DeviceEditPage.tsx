@@ -112,14 +112,15 @@ export default function DeviceEditPage() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Chu kỳ bảo trì (Ngày)</label>
-              <Input 
-                  type="number"
-                  placeholder="VD: 30 (0 nếu không cần)"
-                  value={formData.maintenanceCycleDays}
-                  onChange={e => setFormData({...formData, maintenanceCycleDays: Number(e.target.value)})}
-              />
-              <p className="text-[10px] text-slate-400 mt-1">Hệ thống sẽ tự động nhắc bảo trì sau số ngày này.</p>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Chu kỳ bảo trì (Ngày)</label>
+                <Input 
+                    type="number"
+                    min={0}
+                    placeholder="VD: 30 (Nhập 0 nếu không cần)"
+                    value={formData.maintenanceCycleDays}
+                    onChange={e => setFormData({...formData, maintenanceCycleDays: Number(e.target.value)})}
+                />
+                <p className="text-[10px] text-slate-400 mt-1">Hệ thống sẽ tự động tạo ticket bảo trì.</p>
             </div>
 
             <div>

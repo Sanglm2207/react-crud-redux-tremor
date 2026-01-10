@@ -26,24 +26,50 @@ const issuesSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      
+
       // Create (Load lại sau khi tạo để đúng thứ tự)
       .addCase(createIssue.fulfilled, (state) => {
         state.isLoading = false;
       })
 
-      // Workflow Actions: Update state local ngay lập tức
       .addCase(acceptIssue.fulfilled, (state, action) => {
-        const index = state.list.findIndex(i => i.id === action.payload.id);
-        if (index !== -1) state.list[index] = action.payload;
-      })
+        const updatedIssue = action.payload;
+        // Tìm và cập nhật
+        const index = state.list.findIndex(i => i.id === updatedIssue.id);
+        
+        if (index !== -1) {
+            state.list[index] = {
+                ...state.list[index],
+                status: "PROCESSING", // Cập nhật trạng thái
+                assigneeEmail: updatedIssue.assigneeEmail // Cập nhật người làm (lấy từ action trên)
+            };
+        }
+    })
+
+      // 2. COMPLETE FIX
       .addCase(completeFix.fulfilled, (state, action) => {
-        const index = state.list.findIndex(i => i.id === action.payload.id);
-        if (index !== -1) state.list[index] = action.payload;
+        const { id, needDelivery } = action.meta.arg;
+
+        const index = state.list.findIndex(i => String(i.id) === String(id));
+        if (index !== -1) {
+          state.list[index].status = needDelivery ? "DELIVERING" : "DONE";
+
+          if (action.payload) {
+            state.list[index] = { ...state.list[index], ...action.payload };
+          }
+        }
       })
+
       .addCase(completeDelivery.fulfilled, (state, action) => {
-        const index = state.list.findIndex(i => i.id === action.payload.id);
-        if (index !== -1) state.list[index] = action.payload;
+        const { id } = action.meta.arg;
+        const index = state.list.findIndex(i => String(i.id) === String(id));
+
+        if (index !== -1) {
+          state.list[index].status = "DELIVERED";
+          if (action.payload) {
+            state.list[index] = { ...state.list[index], ...action.payload };
+          }
+        }
       });
   },
 });

@@ -5,11 +5,8 @@ export type IssueStatus = "PENDING" | "PROCESSING" | "DONE" | "DELIVERING" | "DE
 export interface Issue {
   id: number;
   reporterName?: string; // Tên người báo (nếu backend trả về string)
-  reporter?: {           // Hoặc object user (tùy backend map)
-      id: number;
-      name: string;
-      email: string;
-  };
+  creatorEmail?: string; 
+  assigneeEmail?: string;
   department: string;
   deviceName: string;
   errorType: string;

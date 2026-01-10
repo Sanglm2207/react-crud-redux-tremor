@@ -23,7 +23,7 @@ export default function UsersPage() {
   
   const { user: currentUser } = useAppSelector(selectAuth);
   
-  const isSuperAdmin = currentUser?.role?.name === 'SUPER_ADMIN';
+  const isSuperAdmin = currentUser?.role?.name === 'ADMIN';
 
   const { list: users, meta, isLoading } = useAppSelector((state) => state.users);
   const [currentPage, setCurrentPage] = useState(1);
